@@ -4,7 +4,7 @@
     "borcegos_cuero":  [
                            {
                                "talle":  "43",
-                               "cantidad":  1
+                               "cantidad":  10
                            }
                        ],
     "borcegos_cuero_ecologico":  [
@@ -19,7 +19,7 @@
     "cinturones":  [
                        {
                            "tipo":  "Interno Negro",
-                           "cantidad":  0
+                           "cantidad":  2
                        },
                        {
                            "tipo":  "Externo Negro",
