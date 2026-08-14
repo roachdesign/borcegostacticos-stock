@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stock pendiente — BORCEGOSTACTICOS</title>
+<style>
+  :root {
+    --surface-page: #f2f1ec;
+    --surface-card: #fcfcfb;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --border: rgba(11,11,11,0.10);
+    --blue: #2a78d6;
+    --aqua: #1baf7a;
+    --violet: #4a3aa7;
+    --orange: #eb6834;
+    --warning: #fab219;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 24px;
+    background: var(--surface-page);
+    color: var(--text-primary);
+  }
+  #app { max-width: 1100px; margin: 0 auto; }
+  .header {
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+    border-radius: 16px;
+    padding: 24px 28px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+  .header h1 { margin: 0; font-size: 24px; }
+  .header .subtitle { margin: 4px 0 0; font-size: 13px; opacity: 0.9; }
+  .stats { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+  .stat {
+    flex: 1 1 140px;
+    background: var(--surface-card);
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--stat-color, var(--blue));
+  }
+  .stat .stat-icon { font-size: 20px; }
+  .stat .stat-value { font-size: 26px; font-weight: 700; margin: 4px 0 2px; }
+  .stat .stat-label { font-size: 12px; color: var(--text-secondary); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--surface-card);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .card-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; color: #fff; }
+  .card-header .icon { font-size: 20px; }
+  .card-header h2 { margin: 0; font-size: 15px; flex: 1; }
+  .card-header .badge {
+    background: rgba(255,255,255,0.25);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .card-cuero .card-header { background: var(--blue); }
+  .card-ecologico .card-header { background: var(--aqua); }
+  .card-chalecos .card-header { background: var(--violet); }
+  .card-cintos .card-header { background: var(--orange); }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 9px 18px; text-align: left; font-size: 13.5px; border-bottom: 1px solid var(--border); }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); background: rgba(11,11,11,0.03); }
+  tr:last-child td { border-bottom: none; }
+  td.empty { text-align: center; color: var(--text-muted); font-style: italic; padding: 18px; }
+  .footer-note { text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 20px; }
+  .estado { text-align: center; color: var(--text-secondary); padding: 40px; font-size: 14px; }
+  .estado.error { color: #d03b3b; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="header">
+    <div>
+      <h1>📦 Stock pendiente</h1>
+      <div class="subtitle">BORCEGOSTACTICOS &mdash; <span id="actualizado">cargando...</span></div>
+    </div>
+  </div>
+
+  <div id="contenido">
+    <div class="estado">Cargando datos...</div>
+  </div>
+
+  <div class="footer-note">Datos actualizados automaticamente cada 15 minutos desde Mercado Libre</div>
+</div>
+
+<script>
+const STOCK_URL = "https://raw.githubusercontent.com/roachdesign/borcegostacticos-stock/main/stock.json";
+
+function filas(items, cols, colNames) {
+  if (!items || items.length === 0) {
+    return `<tr><td colspan="${cols.length}" class="empty">Sin pedidos pendientes</td></tr>`;
+  }
+  return items.map(item => {
+    return "<tr>" + cols.map(c => `<td>${item[c]}</td>`).join("") + "</tr>";
+  }).join("");
+}
+
+function totalCantidad(items) {
+  if (!items || items.length === 0) return 0;
+  return items.reduce((sum, i) => sum + (i.cantidad || 0), 0);
+}
+
+function render(data) {
+  document.getElementById("actualizado").textContent = "actualizado " + (data.actualizado || "-");
+
+  const totalCuero = totalCantidad(data.borcegos_cuero);
+  const totalEco = totalCantidad(data.borcegos_cuero_ecologico);
+  const totalChalecos = totalCantidad(data.chalecos);
+  const totalCintos = totalCantidad(data.cinturones);
+
+  const html = `
+    <div class="stats">
+      <div class="stat" style="--stat-color:var(--blue)"><div class="stat-icon">🚚</div><div class="stat-value">${data.envios_pendientes ?? 0}</div><div class="stat-label">Envios pendientes</div></div>
+      <div class="stat" style="--stat-color:var(--blue)"><div class="stat-icon">👢</div><div class="stat-value">${totalCuero}</div><div class="stat-label">Pares - Cuero</div></div>
+      <div class="stat" style="--stat-color:var(--aqua)"><div class="stat-icon">🌿</div><div class="stat-value">${totalEco}</div><div class="stat-label">Pares - Cuero ecologico</div></div>
+      <div class="stat" style="--stat-color:var(--violet)"><div class="stat-icon">🦺</div><div class="stat-value">${totalChalecos}</div><div class="stat-label">Chalecos</div></div>
+      <div class="stat" style="--stat-color:var(--orange)"><div class="stat-icon">🪢</div><div class="stat-value">${totalCintos}</div><div class="stat-label">Cinturones</div></div>
+    </div>
+
+    <div class="grid">
+      <div class="card card-cuero">
+        <div class="card-header"><span class="icon">👢</span><h2>Borcegos - Cuero</h2><span class="badge">${totalCuero} pares</span></div>
+        <table><tr><th>Talle</th><th>Cantidad</th></tr>${filas(data.borcegos_cuero, ["talle","cantidad"])}</table>
+      </div>
+
+      <div class="card card-ecologico">
+        <div class="card-header"><span class="icon">🌿</span><h2>Borcegos - Cuero ecologico</h2><span class="badge">${totalEco} pares</span></div>
+        <table><tr><th>Talle</th><th>Cantidad</th></tr>${filas(data.borcegos_cuero_ecologico, ["talle","cantidad"])}</table>
+      </div>
+
+      <div class="card card-chalecos">
+        <div class="card-header"><span class="icon">🦺</span><h2>Chalecos</h2><span class="badge">${totalChalecos} u.</span></div>
+        <table><tr><th>Talle</th><th>Cantidad</th></tr>${filas(data.chalecos, ["talle","cantidad"])}</table>
+      </div>
+
+      <div class="card card-cintos">
+        <div class="card-header"><span class="icon">🪢</span><h2>Cinturones</h2><span class="badge">${totalCintos} u.</span></div>
+        <table><tr><th>Tipo</th><th>Cantidad</th></tr>${filas(data.cinturones, ["tipo","cantidad"])}</table>
+      </div>
+    </div>
+  `;
+  document.getElementById("contenido").innerHTML = html;
+}
+
+function cargar() {
+  fetch(STOCK_URL + "?t=" + Date.now())
+    .then(r => {
+      if (!r.ok) throw new Error("No se pudo leer stock.json (" + r.status + ")");
+      return r.json();
+    })
+    .then(render)
+    .catch(err => {
+      document.getElementById("contenido").innerHTML =
+        `<div class="estado error">No se pudieron cargar los datos.<br>${err.message}</div>`;
+    });
+}
+
+cargar();
+setInterval(cargar, 5 * 60 * 1000); // refresca solo cada 5 minutos
+</script>
+
+</body>
+</html>
