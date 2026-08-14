@@ -1,0 +1,37 @@
+{
+    "actualizado":  "14/08/2026 18:34",
+    "envios_pendientes":  3,
+    "borcegos_cuero":  [
+                           {
+                               "talle":  "43",
+                               "cantidad":  1
+                           }
+                       ],
+    "borcegos_cuero_ecologico":  [
+                                     {
+                                         "talle":  "43",
+                                         "cantidad":  1
+                                     }
+                                 ],
+    "chalecos":  [
+
+                 ],
+    "cinturones":  [
+                       {
+                           "tipo":  "Interno Negro",
+                           "cantidad":  0
+                       },
+                       {
+                           "tipo":  "Externo Negro",
+                           "cantidad":  8
+                       },
+                       {
+                           "tipo":  "Externo Verde",
+                           "cantidad":  0
+                       },
+                       {
+                           "tipo":  "Externo Arena",
+                           "cantidad":  0
+                       }
+                   ]
+}
