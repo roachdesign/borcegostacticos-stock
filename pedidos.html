@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedidos a preparar — BORCEGOSTACTICOS</title>
+<style>
+  :root {
+    --surface-page: #f2f1ec;
+    --surface-card: #fcfcfb;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --border: rgba(11,11,11,0.10);
+    --blue: #2a78d6;
+    --aqua: #1baf7a;
+    --violet: #4a3aa7;
+    --orange: #eb6834;
+    --warning: #fab219;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 24px;
+    background: var(--surface-page);
+    color: var(--text-primary);
+  }
+  #app { max-width: 1100px; margin: 0 auto; }
+  .header {
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+    border-radius: 16px;
+    padding: 24px 28px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+  .header h1 { margin: 0; font-size: 24px; }
+  .header .subtitle { margin: 4px 0 0; font-size: 13px; opacity: 0.9; }
+  .stats { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .stat {
+    flex: 1 1 140px;
+    background: var(--surface-card);
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--stat-color, var(--blue));
+  }
+  .stat .stat-icon { font-size: 20px; }
+  .stat .stat-value { font-size: 26px; font-weight: 700; margin: 4px 0 2px; }
+  .stat .stat-label { font-size: 12px; color: var(--text-secondary); }
+  .section-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin: 22px 0 10px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 8px;
+  }
+  .card {
+    background: var(--surface-card);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .card-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; color: #fff; }
+  .card-header .icon { font-size: 20px; }
+  .card-header h2 { margin: 0; font-size: 15px; flex: 1; }
+  .card-header .badge {
+    background: rgba(255,255,255,0.25);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .card-cuero .card-header { background: var(--blue); }
+  .card-ecologico .card-header { background: var(--aqua); }
+  .card-chalecos .card-header { background: var(--violet); }
+  .card-cintos .card-header { background: var(--orange); }
+  .card-manual .card-header { background: var(--warning); }
+  .card-especiales .card-header { background: var(--warning); }
+  .card-comunes .card-header { background: var(--blue); }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 9px 18px; text-align: left; font-size: 13.5px; border-bottom: 1px solid var(--border); }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); background: rgba(11,11,11,0.03); }
+  tr:last-child td { border-bottom: none; }
+  td.empty { text-align: center; color: var(--text-muted); font-style: italic; padding: 18px; }
+  .empty-note { color: var(--text-muted); font-style: italic; font-size: 13px; }
+  .footer-note { text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 20px; }
+  .estado { text-align: center; color: var(--text-secondary); padding: 40px; font-size: 14px; }
+  .estado.error { color: #d03b3b; }
+
+  /* Pantalla de clave */
+  #gate {
+    max-width: 380px;
+    margin: 12vh auto 0;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+  }
+  #gate .gate-icon { font-size: 32px; margin-bottom: 8px; }
+  #gate h2 { margin: 0 0 6px; font-size: 18px; }
+  #gate p { margin: 0 0 18px; color: var(--text-secondary); font-size: 13px; }
+  #gate input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  #gate button {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    background: var(--blue);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #gate button:hover { opacity: 0.92; }
+  #gateError { color: #d03b3b; font-size: 12.5px; margin-top: 10px; min-height: 16px; }
+
+  #contenido { display: none; }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-icon">🔒</div>
+  <h2>Pedidos a preparar</h2>
+  <p>Ingresá la clave para ver el detalle de pedidos.</p>
+  <input type="password" id="claveInput" placeholder="Clave" autocomplete="off">
+  <button id="btnEntrar" onclick="intentarAbrir()">Entrar</button>
+  <div id="gateError"></div>
+</div>
+
+<div id="app">
+  <div class="header">
+    <div>
+      <h1>📦 Pedidos a preparar</h1>
+      <div class="subtitle">BORCEGOSTACTICOS &mdash; <span id="actualizado">cargando...</span></div>
+    </div>
+  </div>
+
+  <div id="contenido"></div>
+
+  <div class="footer-note">Datos cifrados extremo a extremo &mdash; sin la clave, este contenido no se puede leer</div>
+</div>
+
+<script>
+// Se usa la API de GitHub (no raw.githubusercontent.com) porque el CDN de "raw"
+// a veces cachea el archivo durante horas y no refleja los cambios al instante.
+const PEDIDOS_API_URL = "https://api.github.com/repos/roachdesign/borcegostacticos-stock/contents/pedidos.enc.json";
+
+const ORDEN_SUBCATEGORIAS = [
+  "Cuero",
+  "Cuero + Cinto Interno y Externo",
+  "Cuero + Cinto Externo",
+  "Cuero + Cinto Interno",
+  "Cuero Ecologico"
+];
+function rangoSubcategoria(nombre) {
+  const idx = ORDEN_SUBCATEGORIAS.indexOf(nombre);
+  return idx < 0 ? 999 : idx;
+}
+
+function filas(items, cols, emptyMsg) {
+  if (!items || items.length === 0) {
+    return `<tr><td colspan="${cols.length}" class="empty">${emptyMsg || "Sin pedidos pendientes"}</td></tr>`;
+  }
+  return items.map(item => "<tr>" + cols.map(c => `<td>${item[c] ?? ""}</td>`).join("") + "</tr>").join("");
+}
+
+function totalCantidad(items) {
+  if (!items || items.length === 0) return 0;
+  return items.reduce((sum, i) => sum + (i.cantidad || 0), 0);
+}
+
+function card(claseColor, icon, titulo, badge, headerCols, filasHtml, emptyMsg, colspan) {
+  const thRow = headerCols.map(h => `<th>${h}</th>`).join("");
+  const body = filasHtml || `<tr><td colspan="${colspan}" class="empty">${emptyMsg}</td></tr>`;
+  return `
+    <div class="card card-${claseColor}">
+      <div class="card-header"><span class="icon">${icon}</span><h2>${titulo}</h2><span class="badge">${badge}</span></div>
+      <table><tr>${thRow}</tr>${body}</table>
+    </div>`;
+}
+
+function render(data) {
+  document.getElementById("actualizado").textContent = "actualizado " + (data.actualizado || "-");
+
+  const totalCuero = totalCantidad(data.borcegos_cuero);
+  const totalEco = totalCantidad(data.borcegos_cuero_ecologico);
+  const totalChalecos = totalCantidad(data.chalecos);
+  const totalCintos = totalCantidad(data.cinturones);
+  const totalCintosComunes = totalCantidad(data.cinturones_comunes);
+  const totalManual = (data.sin_clasificar || []).length;
+  const totalEspeciales = (data.pedidos_especiales || []).length;
+  const totalEspecialesCintos = (data.cinturones_especiales || []).length;
+
+  const filasEspeciales = filas(data.pedidos_especiales, ["pedido", "detalle", "total"], "No hay pedidos especiales pendientes");
+  const filasEspecialesCintos = filas(data.cinturones_especiales, ["pedido", "detalle", "total"], "No hay pedidos especiales de cinturones pendientes");
+  const filasCintosComunes = filas(data.cinturones_comunes, ["tipo", "cantidad"], "Sin pedidos pendientes");
+  const filasChalecos = filas(data.chalecos, ["talle", "cantidad"], "Sin pedidos pendientes");
+  const filasManual = filas(data.sin_clasificar, ["sku", "titulo", "cantidad"], "Todo clasificado");
+
+  const cardEspeciales = card("especiales", "🔗", "Pedidos especiales (mas de 1 par)", `${totalEspeciales} pedidos`, ["Pedido", "Detalle", "Total pares"], filasEspeciales, "No hay pedidos especiales pendientes", 3);
+  const cardEspecialesCintos = card("especiales", "🪢", "Cinturones especiales (mas de 1 unidad)", `${totalEspecialesCintos} pedidos`, ["Pedido", "Detalle", "Total"], filasEspecialesCintos, "No hay pedidos especiales de cinturones pendientes", 3);
+  const cardChalecos = card("chalecos", "🦺", "Chalecos", `${totalChalecos} u.`, ["Talle", "Cantidad"], filasChalecos, "Sin pedidos pendientes", 2);
+  const cardCintosComunes = card("cintos", "🪢", "Cinturones (ventas normales)", `${totalCintosComunes} u.`, ["Tipo", "Cantidad"], filasCintosComunes, "Sin pedidos pendientes", 2);
+  const cardManual = card("manual", "⚠️", "Sin clasificar", `${totalManual} items`, ["SKU", "Titulo", "Cantidad"], filasManual, "Todo clasificado", 3);
+
+  const grupos = {};
+  (data.ventas_comunes || []).forEach(v => {
+    if (!grupos[v.subcategoria]) grupos[v.subcategoria] = [];
+    grupos[v.subcategoria].push(v);
+  });
+  const cardsComunes = Object.keys(grupos)
+    .sort((a, b) => rangoSubcategoria(a) - rangoSubcategoria(b))
+    .map(nombre => {
+      const grupo = grupos[nombre];
+      const filasSub = filas(grupo, ["talle", "cantidad"], "Sin ventas");
+      const totalSub = totalCantidad(grupo);
+      return card("comunes", "👟", nombre, `${totalSub} pares`, ["Talle", "Cantidad"], filasSub, "Sin ventas", 2);
+    }).join("");
+
+  const html = `
+    <div class="stats">
+      <div class="stat" style="--stat-color:var(--blue)"><div class="stat-icon">🚚</div><div class="stat-value">${data.envios_pendientes ?? 0}</div><div class="stat-label">Envios pendientes</div></div>
+      <div class="stat" style="--stat-color:var(--blue)"><div class="stat-icon">👢</div><div class="stat-value">${totalCuero}</div><div class="stat-label">Pares - Cuero</div></div>
+      <div class="stat" style="--stat-color:var(--aqua)"><div class="stat-icon">🌿</div><div class="stat-value">${totalEco}</div><div class="stat-label">Pares - Cuero ecologico</div></div>
+      <div class="stat" style="--stat-color:var(--violet)"><div class="stat-icon">🦺</div><div class="stat-value">${totalChalecos}</div><div class="stat-label">Chalecos</div></div>
+      <div class="stat" style="--stat-color:var(--orange)"><div class="stat-icon">🪢</div><div class="stat-value">${totalCintos}</div><div class="stat-label">Cinturones</div></div>
+    </div>
+
+    <div class="section-title">Pedidos especiales &mdash; combinan mas de 1 par y hay que prepararlos juntos</div>
+    <div class="grid">${cardEspeciales}${cardEspecialesCintos}</div>
+
+    <div class="section-title">Ventas comunes &mdash; 1 solo par por pedido, agrupadas por talle</div>
+    <div class="grid">${cardsComunes || `<p class="empty-note">No hay ventas comunes (de 1 solo par) pendientes.</p>`}</div>
+
+    <div class="section-title">Chalecos y cinturones &mdash; sin contar los que ya aparecen arriba como especiales</div>
+    <div class="grid">${cardChalecos}${cardCintosComunes}</div>
+
+    <div class="section-title">Sin clasificar</div>
+    <div class="grid">${cardManual}</div>
+  `;
+
+  document.getElementById("contenido").innerHTML = html;
+}
+
+// --- Descifrado (AES-256-CBC + HMAC-SHA256, clave derivada por PBKDF2) ---
+// Mismo esquema que usa el script de PowerShell para cifrar: sin la clave correcta
+// el HMAC no valida y no hay forma de leer el contenido (no es "estar escondido",
+// es que matematicamente no se puede recuperar el texto sin la clave).
+
+function b64ToBuf(b64) {
+  const bin = atob(b64);
+  const buf = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  return buf;
+}
+
+async function derivarClaves(password, saltB64, iterations) {
+  const salt = b64ToBuf(saltB64);
+  const baseKey = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations, hash: "SHA-256" }, baseKey, 64 * 8);
+  const bytes = new Uint8Array(bits);
+  const encKeyBytes = bytes.slice(0, 32);
+  const macKeyBytes = bytes.slice(32, 64);
+  const encKey = await crypto.subtle.importKey("raw", encKeyBytes, { name: "AES-CBC" }, false, ["decrypt"]);
+  const macKey = await crypto.subtle.importKey("raw", macKeyBytes, { name: "HMAC", hash: "SHA-256" }, false, ["verify"]);
+  return { encKey, macKey };
+}
+
+async function descifrar(payload, password) {
+  const { encKey, macKey } = await derivarClaves(password, payload.salt, payload.iterations);
+  const iv = b64ToBuf(payload.iv);
+  const ciphertext = b64ToBuf(payload.ciphertext);
+  const tag = b64ToBuf(payload.hmac);
+
+  const toMac = new Uint8Array(iv.length + ciphertext.length);
+  toMac.set(iv, 0);
+  toMac.set(ciphertext, iv.length);
+
+  const valido = await crypto.subtle.verify("HMAC", macKey, tag, toMac);
+  if (!valido) throw new Error("CLAVE_INCORRECTA");
+
+  const plainBuf = await crypto.subtle.decrypt({ name: "AES-CBC", iv }, encKey, ciphertext);
+  return new TextDecoder().decode(plainBuf);
+}
+
+let payloadCifrado = null;
+
+function cargarPayload() {
+  return fetch(PEDIDOS_API_URL, { headers: { Accept: "application/vnd.github+json" } })
+    .then(r => {
+      if (!r.ok) throw new Error("No se pudo leer pedidos.enc.json (" + r.status + ")");
+      return r.json();
+    })
+    .then(fileInfo => {
+      const jsonText = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ""))));
+      return JSON.parse(jsonText);
+    });
+}
+
+async function intentarAbrir() {
+  const clave = document.getElementById("claveInput").value;
+  const errorEl = document.getElementById("gateError");
+  const btn = document.getElementById("btnEntrar");
+  if (!clave) return;
+
+  errorEl.textContent = "";
+  btn.disabled = true;
+  btn.textContent = "Verificando...";
+
+  try {
+    if (!payloadCifrado) {
+      payloadCifrado = await cargarPayload();
+    }
+    const jsonText = await descifrar(payloadCifrado, clave);
+    const data = JSON.parse(jsonText);
+
+    document.getElementById("gate").style.display = "none";
+    document.getElementById("contenido").style.display = "block";
+    render(data);
+  } catch (err) {
+    if (err.message === "CLAVE_INCORRECTA") {
+      errorEl.textContent = "Clave incorrecta. Probá de nuevo.";
+    } else {
+      errorEl.textContent = "No se pudo cargar la informacion: " + err.message;
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Entrar";
+  }
+}
+
+document.getElementById("claveInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") intentarAbrir();
+});
+</script>
+
+</body>
+</html>
