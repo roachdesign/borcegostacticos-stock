@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BORCEGOSTACTICOS — Panel</title>
+<title>BORCEGOSTACTICOS — Panel Mercado Libre</title>
 <style>
   :root {
+    --ml-yellow: #ffe600;
+    --ml-blue: #2d3277;
+    --ml-blue-light: #3d4a9e;
     --surface-page: #f2f1ec;
     --surface-card: #fcfcfb;
     --text-primary: #0b0b0b;
     --text-secondary: #52514e;
     --text-muted: #898781;
     --border: rgba(11,11,11,0.10);
-    --blue: #2a78d6;
-    --aqua: #1baf7a;
-    --violet: #4a3aa7;
   }
   * { box-sizing: border-box; }
   body {
@@ -28,17 +28,67 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+  }
+  /* Onda decorativa de fondo */
+  body::before {
+    content: "";
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,230,0,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: "";
+    position: fixed;
+    bottom: -15%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(45,50,119,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
   }
   .container {
     width: 100%;
-    max-width: 480px;
+    max-width: 460px;
     text-align: center;
+    position: relative;
+    z-index: 1;
   }
-  .logo {
-    font-size: 28px;
+  /* Badge Mercado Libre */
+  .ml-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ml-yellow);
+    color: var(--ml-blue);
+    font-size: 12px;
     font-weight: 700;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, var(--blue), var(--violet));
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(255,230,0,0.35);
+  }
+  .ml-badge::before {
+    content: "🛒";
+    font-size: 14px;
+  }
+  /* Logo / título */
+  .brand {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--ml-blue), var(--ml-blue-light));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -46,80 +96,148 @@
   .subtitle {
     font-size: 14px;
     color: var(--text-secondary);
-    margin-bottom: 40px;
+    margin-bottom: 36px;
+    line-height: 1.5;
   }
-  .btn {
-    display: block;
+  /* Tarjetas botón */
+  .btn-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     width: 100%;
-    padding: 22px 28px;
-    margin-bottom: 16px;
+    padding: 22px 24px;
+    margin-bottom: 14px;
     border-radius: 16px;
     border: 1px solid var(--border);
-    font-size: 17px;
-    font-weight: 600;
+    background: var(--surface-card);
     text-decoration: none;
-    color: #fff;
+    color: var(--text-primary);
     cursor: pointer;
-    transition: transform .15s ease, box-shadow .15s ease;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     text-align: left;
     position: relative;
+    overflow: hidden;
   }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  .btn-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    border-radius: 16px 0 0 16px;
+    transition: width .25s ease;
   }
-  .btn:active {
-    transform: translateY(0);
+  .btn-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+    border-color: rgba(45,50,119,0.18);
   }
-  .btn-stock {
-    background: linear-gradient(135deg, var(--blue), var(--violet));
+  .btn-card:hover::before {
+    width: 6px;
   }
-  .btn-pedidos {
-    background: linear-gradient(135deg, var(--aqua), #0e8f5e);
+  .btn-card:active {
+    transform: translateY(-1px);
   }
-  .btn-icon {
-    font-size: 24px;
-    margin-right: 12px;
-    vertical-align: middle;
+  /* Colores de acento por botón */
+  .btn-stock::before { background: var(--ml-blue); }
+  .btn-pedidos::before { background: var(--ml-yellow); }
+  .btn-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
   }
-  .btn-text {
-    vertical-align: middle;
+  .btn-stock .btn-icon-wrap {
+    background: linear-gradient(135deg, var(--ml-blue), var(--ml-blue-light));
+    box-shadow: 0 4px 12px rgba(45,50,119,0.25);
+  }
+  .btn-pedidos .btn-icon-wrap {
+    background: linear-gradient(135deg, #f5d900, var(--ml-yellow));
+    box-shadow: 0 4px 12px rgba(255,230,0,0.35);
+  }
+  .btn-content { flex: 1; }
+  .btn-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 3px;
+    display: block;
+  }
+  .btn-desc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    display: block;
   }
   .btn-arrow {
-    position: absolute;
-    right: 24px;
-    top: 50%;
-    transform: translateY(-50%);
     font-size: 20px;
-    opacity: 0.7;
+    color: var(--text-muted);
+    transition: transform .2s ease, color .2s ease;
   }
+  .btn-card:hover .btn-arrow {
+    transform: translateX(4px);
+    color: var(--ml-blue);
+  }
+  .btn-pedidos:hover .btn-arrow {
+    color: #c4a900;
+  }
+  /* Footer */
   .footer {
-    margin-top: 32px;
+    margin-top: 28px;
     font-size: 12px;
     color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .footer-dot {
+    width: 6px;
+    height: 6px;
+    background: #1baf7a;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="logo">BORCEGOSTACTICOS</div>
-  <div class="subtitle">Panel de acceso rápido</div>
+  <div class="ml-badge">Mercado Libre</div>
+  <div class="brand">BORCEGOSTACTICOS</div>
+  <div class="subtitle">Panel de gestión de stock y pedidos<br>actualizado en tiempo real</div>
 
-  <a href="https://roachdesign.github.io/borcegostacticos-stock/stock.html" class="btn btn-stock">
-    <span class="btn-icon">📦</span>
-    <span class="btn-text">Stock total</span>
+  <a href="https://roachdesign.github.io/borcegostacticos-stock/stock.html" class="btn-card btn-stock">
+    <div class="btn-icon-wrap">📦</div>
+    <div class="btn-content">
+      <span class="btn-title">Stock total</span>
+      <span class="btn-desc">Ver inventario completo por categoría</span>
+    </div>
     <span class="btn-arrow">→</span>
   </a>
 
-  <a href="https://roachdesign.github.io/borcegostacticos-stock/pedidos.html" class="btn btn-pedidos">
-    <span class="btn-icon">📋</span>
-    <span class="btn-text">Pedidos para preparar</span>
+  <a href="https://roachdesign.github.io/borcegostacticos-stock/pedidos.html" class="btn-card btn-pedidos">
+    <div class="btn-icon-wrap">📋</div>
+    <div class="btn-content">
+      <span class="btn-title">Pedidos para preparar</span>
+      <span class="btn-desc">Listado de órdenes pendientes de envío</span>
+    </div>
     <span class="btn-arrow">→</span>
   </a>
 
-  <div class="footer">Seleccioná una opción para continuar</div>
+  <div class="footer">
+    <span class="footer-dot"></span>
+    Sistema activo — sincronizado con Mercado Libre
+  </div>
 </div>
 
 </body>
