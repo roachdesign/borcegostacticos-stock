@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BORCEGOSTACTICOS — Panel</title>
+<style>
+  :root {
+    --surface-page: #f2f1ec;
+    --surface-card: #fcfcfb;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --border: rgba(11,11,11,0.10);
+    --blue: #2a78d6;
+    --aqua: #1baf7a;
+    --violet: #4a3aa7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 24px;
+    background: var(--surface-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+  }
+  .logo {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+  }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 22px 28px;
+    margin-bottom: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    text-align: left;
+    position: relative;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  }
+  .btn:active {
+    transform: translateY(0);
+  }
+  .btn-stock {
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+  }
+  .btn-pedidos {
+    background: linear-gradient(135deg, var(--aqua), #0e8f5e);
+  }
+  .btn-icon {
+    font-size: 24px;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+  .btn-text {
+    vertical-align: middle;
+  }
+  .btn-arrow {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    opacity: 0.7;
+  }
+  .footer {
+    margin-top: 32px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="logo">BORCEGOSTACTICOS</div>
+  <div class="subtitle">Panel de acceso rápido</div>
+
+  <a href="https://roachdesign.github.io/borcegostacticos-stock/stock.html" class="btn btn-stock">
+    <span class="btn-icon">📦</span>
+    <span class="btn-text">Stock total</span>
+    <span class="btn-arrow">→</span>
+  </a>
+
+  <a href="https://roachdesign.github.io/borcegostacticos-stock/pedidos.html" class="btn btn-pedidos">
+    <span class="btn-icon">📋</span>
+    <span class="btn-text">Pedidos para preparar</span>
+    <span class="btn-arrow">→</span>
+  </a>
+
+  <div class="footer">Seleccioná una opción para continuar</div>
+</div>
+
+</body>
+</html>
