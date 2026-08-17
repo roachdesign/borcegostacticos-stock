@@ -1,6 +1,6 @@
 {
-    "actualizado":  "17/08/2026 20:07",
-    "envios_pendientes":  32,
+    "actualizado":  "17/08/2026 20:22",
+    "envios_pendientes":  33,
     "borcegos_cuero":  [
                            {
                                "talle":  "37",
@@ -16,7 +16,7 @@
                            },
                            {
                                "talle":  "42",
-                               "cantidad":  3
+                               "cantidad":  4
                            },
                            {
                                "talle":  "43",
@@ -67,7 +67,7 @@
                        },
                        {
                            "tipo":  "Externo Negro",
-                           "cantidad":  9
+                           "cantidad":  10
                        },
                        {
                            "tipo":  "Externo Verde",
