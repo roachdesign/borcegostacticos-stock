@@ -1,10 +1,10 @@
 {
-    "actualizado":  "18/08/2026 01:22",
-    "envios_pendientes":  36,
+    "actualizado":  "18/08/2026 10:22",
+    "envios_pendientes":  37,
     "borcegos_cuero":  [
                            {
                                "talle":  "37",
-                               "cantidad":  2
+                               "cantidad":  3
                            },
                            {
                                "talle":  "40",
@@ -12,15 +12,15 @@
                            },
                            {
                                "talle":  "41",
-                               "cantidad":  5
+                               "cantidad":  6
                            },
                            {
                                "talle":  "42",
-                               "cantidad":  4
+                               "cantidad":  3
                            },
                            {
                                "talle":  "43",
-                               "cantidad":  2
+                               "cantidad":  4
                            },
                            {
                                "talle":  "44",
@@ -42,7 +42,7 @@
                                      },
                                      {
                                          "talle":  "41",
-                                         "cantidad":  4
+                                         "cantidad":  3
                                      },
                                      {
                                          "talle":  "42",
@@ -50,7 +50,7 @@
                                      },
                                      {
                                          "talle":  "43",
-                                         "cantidad":  7
+                                         "cantidad":  5
                                      },
                                      {
                                          "talle":  "44",
