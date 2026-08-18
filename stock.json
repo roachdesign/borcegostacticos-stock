@@ -1,61 +1,18 @@
 {
-    "actualizado":  "18/08/2026 11:07",
-    "envios_pendientes":  38,
+    "actualizado":  "18/08/2026 11:22",
+    "envios_pendientes":  3,
     "borcegos_cuero":  [
                            {
-                               "talle":  "37",
-                               "cantidad":  3
-                           },
-                           {
-                               "talle":  "40",
-                               "cantidad":  2
-                           },
-                           {
-                               "talle":  "41",
-                               "cantidad":  6
-                           },
-                           {
-                               "talle":  "42",
-                               "cantidad":  3
-                           },
-                           {
                                "talle":  "43",
-                               "cantidad":  4
+                               "cantidad":  1
                            },
                            {
                                "talle":  "44",
-                               "cantidad":  2
+                               "cantidad":  1
                            }
                        ],
     "borcegos_cuero_ecologico":  [
-                                     {
-                                         "talle":  "38",
-                                         "cantidad":  1
-                                     },
-                                     {
-                                         "talle":  "39",
-                                         "cantidad":  2
-                                     },
-                                     {
-                                         "talle":  "40",
-                                         "cantidad":  5
-                                     },
-                                     {
-                                         "talle":  "41",
-                                         "cantidad":  3
-                                     },
-                                     {
-                                         "talle":  "42",
-                                         "cantidad":  4
-                                     },
-                                     {
-                                         "talle":  "43",
-                                         "cantidad":  5
-                                     },
-                                     {
-                                         "talle":  "44",
-                                         "cantidad":  1
-                                     }
+
                                  ],
     "chalecos":  [
 
@@ -67,7 +24,7 @@
                        },
                        {
                            "tipo":  "Externo Negro",
-                           "cantidad":  11
+                           "cantidad":  2
                        },
                        {
                            "tipo":  "Externo Verde",
