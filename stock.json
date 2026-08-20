@@ -1,6 +1,6 @@
 {
-    "actualizado":  "20/08/2026 14:07",
-    "envios_pendientes":  3,
+    "actualizado":  "20/08/2026 14:22",
+    "envios_pendientes":  4,
     "borcegos_cuero":  [
                            {
                                "talle":  "36",
@@ -10,6 +10,10 @@
     "borcegos_cuero_ecologico":  [
                                      {
                                          "talle":  "36",
+                                         "cantidad":  1
+                                     },
+                                     {
+                                         "talle":  "38",
                                          "cantidad":  1
                                      },
                                      {
