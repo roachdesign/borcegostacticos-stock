@@ -1,29 +1,14 @@
 {
-    "actualizado":  "20/08/2026 11:07",
-    "envios_pendientes":  9,
+    "actualizado":  "20/08/2026 11:22",
+    "envios_pendientes":  1,
     "borcegos_cuero":  [
                            {
-                               "talle":  "39",
+                               "talle":  "36",
                                "cantidad":  1
-                           },
-                           {
-                               "talle":  "40",
-                               "cantidad":  2
-                           },
-                           {
-                               "talle":  "42",
-                               "cantidad":  2
                            }
                        ],
     "borcegos_cuero_ecologico":  [
-                                     {
-                                         "talle":  "40",
-                                         "cantidad":  1
-                                     },
-                                     {
-                                         "talle":  "43",
-                                         "cantidad":  3
-                                     }
+
                                  ],
     "chalecos":  [
 
