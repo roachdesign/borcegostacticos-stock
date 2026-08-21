@@ -1,6 +1,6 @@
 {
-    "actualizado":  "21/08/2026 12:52",
-    "envios_pendientes":  2,
+    "actualizado":  "21/08/2026 13:07",
+    "envios_pendientes":  3,
     "borcegos_cuero":  [
 
                        ],
@@ -8,6 +8,10 @@
                                      {
                                          "talle":  "39",
                                          "cantidad":  2
+                                     },
+                                     {
+                                         "talle":  "41",
+                                         "cantidad":  1
                                      }
                                  ],
     "chalecos":  [
