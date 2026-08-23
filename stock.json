@@ -1,6 +1,6 @@
 {
-    "actualizado":  "23/08/2026 01:37",
-    "envios_pendientes":  18,
+    "actualizado":  "23/08/2026 18:22",
+    "envios_pendientes":  24,
     "borcegos_cuero":  [
                            {
                                "talle":  "36",
@@ -11,7 +11,15 @@
                                "cantidad":  1
                            },
                            {
+                               "talle":  "38",
+                               "cantidad":  1
+                           },
+                           {
                                "talle":  "39",
+                               "cantidad":  1
+                           },
+                           {
+                               "talle":  "40",
                                "cantidad":  1
                            },
                            {
@@ -20,7 +28,7 @@
                            },
                            {
                                "talle":  "42",
-                               "cantidad":  2
+                               "cantidad":  3
                            },
                            {
                                "talle":  "43",
@@ -38,11 +46,11 @@
                                      },
                                      {
                                          "talle":  "39",
-                                         "cantidad":  2
+                                         "cantidad":  3
                                      },
                                      {
                                          "talle":  "41",
-                                         "cantidad":  2
+                                         "cantidad":  4
                                      },
                                      {
                                          "talle":  "42",
@@ -59,11 +67,11 @@
     "cinturones":  [
                        {
                            "tipo":  "Interno Negro",
-                           "cantidad":  2
+                           "cantidad":  3
                        },
                        {
                            "tipo":  "Externo Negro",
-                           "cantidad":  2
+                           "cantidad":  3
                        },
                        {
                            "tipo":  "Externo Verde",
