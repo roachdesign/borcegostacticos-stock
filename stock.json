@@ -1,67 +1,12 @@
 {
-    "actualizado":  "24/08/2026 12:37",
-    "envios_pendientes":  29,
+    "actualizado":  "24/08/2026 12:52",
+    "envios_pendientes":  1,
     "borcegos_cuero":  [
-                           {
-                               "talle":  "37",
-                               "cantidad":  1
-                           },
-                           {
-                               "talle":  "38",
-                               "cantidad":  2
-                           },
-                           {
-                               "talle":  "39",
-                               "cantidad":  1
-                           },
-                           {
-                               "talle":  "40",
-                               "cantidad":  2
-                           },
-                           {
-                               "talle":  "41",
-                               "cantidad":  2
-                           },
-                           {
-                               "talle":  "42",
-                               "cantidad":  3
-                           },
-                           {
-                               "talle":  "43",
-                               "cantidad":  2
-                           },
-                           {
-                               "talle":  "44",
-                               "cantidad":  1
-                           }
+
                        ],
     "borcegos_cuero_ecologico":  [
                                      {
-                                         "talle":  "37",
-                                         "cantidad":  2
-                                     },
-                                     {
                                          "talle":  "39",
-                                         "cantidad":  3
-                                     },
-                                     {
-                                         "talle":  "40",
-                                         "cantidad":  3
-                                     },
-                                     {
-                                         "talle":  "41",
-                                         "cantidad":  3
-                                     },
-                                     {
-                                         "talle":  "42",
-                                         "cantidad":  2
-                                     },
-                                     {
-                                         "talle":  "43",
-                                         "cantidad":  3
-                                     },
-                                     {
-                                         "talle":  "45",
                                          "cantidad":  1
                                      }
                                  ],
@@ -71,11 +16,11 @@
     "cinturones":  [
                        {
                            "tipo":  "Interno Negro",
-                           "cantidad":  4
+                           "cantidad":  0
                        },
                        {
                            "tipo":  "Externo Negro",
-                           "cantidad":  4
+                           "cantidad":  0
                        },
                        {
                            "tipo":  "Externo Verde",
