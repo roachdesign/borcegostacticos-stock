@@ -1,6 +1,6 @@
 {
-    "actualizado":  "24/08/2026 06:37",
-    "envios_pendientes":  28,
+    "actualizado":  "24/08/2026 06:52",
+    "envios_pendientes":  29,
     "borcegos_cuero":  [
                            {
                                "talle":  "36",
@@ -20,7 +20,7 @@
                            },
                            {
                                "talle":  "40",
-                               "cantidad":  1
+                               "cantidad":  2
                            },
                            {
                                "talle":  "41",
@@ -71,11 +71,11 @@
     "cinturones":  [
                        {
                            "tipo":  "Interno Negro",
-                           "cantidad":  3
+                           "cantidad":  4
                        },
                        {
                            "tipo":  "Externo Negro",
-                           "cantidad":  3
+                           "cantidad":  4
                        },
                        {
                            "tipo":  "Externo Verde",
