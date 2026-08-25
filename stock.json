@@ -1,22 +1,14 @@
 {
-    "actualizado":  "25/08/2026 01:07",
-    "envios_pendientes":  11,
+    "actualizado":  "25/08/2026 13:07",
+    "envios_pendientes":  7,
     "borcegos_cuero":  [
                            {
-                               "talle":  "40",
-                               "cantidad":  1
-                           },
-                           {
-                               "talle":  "41",
+                               "talle":  "42",
                                "cantidad":  2
                            },
                            {
                                "talle":  "43",
-                               "cantidad":  2
-                           },
-                           {
-                               "talle":  "44",
-                               "cantidad":  3
+                               "cantidad":  1
                            }
                        ],
     "borcegos_cuero_ecologico":  [
@@ -25,7 +17,11 @@
                                          "cantidad":  1
                                      },
                                      {
-                                         "talle":  "40",
+                                         "talle":  "42",
+                                         "cantidad":  4
+                                     },
+                                     {
+                                         "talle":  "43",
                                          "cantidad":  1
                                      }
                                  ],
@@ -35,11 +31,11 @@
     "cinturones":  [
                        {
                            "tipo":  "Interno Negro",
-                           "cantidad":  0
+                           "cantidad":  1
                        },
                        {
                            "tipo":  "Externo Negro",
-                           "cantidad":  1
+                           "cantidad":  0
                        },
                        {
                            "tipo":  "Externo Verde",
