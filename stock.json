@@ -1,10 +1,14 @@
 {
-    "actualizado":  "25/08/2026 15:52",
-    "envios_pendientes":  7,
+    "actualizado":  "25/08/2026 16:07",
+    "envios_pendientes":  8,
     "borcegos_cuero":  [
                            {
+                               "talle":  "41",
+                               "cantidad":  1
+                           },
+                           {
                                "talle":  "42",
-                               "cantidad":  2
+                               "cantidad":  3
                            },
                            {
                                "talle":  "43",
