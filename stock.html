@@ -1,193 +1,588 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stock pendiente — BORCEGOSTACTICOS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Stock - Borcegos</title>
+
+<!-- Firebase (compat SDK, simple de usar sin build tools) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <style>
   :root {
-    --surface-page: #f2f1ec;
-    --surface-card: #fcfcfb;
-    --text-primary: #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted: #898781;
-    --border: rgba(11,11,11,0.10);
-    --blue: #2a78d6;
-    --aqua: #1baf7a;
-    --violet: #4a3aa7;
-    --orange: #eb6834;
-    --warning: #fab219;
+    --bg: #f4f5f7;
+    --card-bg: #ffffff;
+    --border: #e2e4e9;
+    --text: #1f2430;
+    --text-muted: #6b7280;
+    --cuero: #8b5a2b;
+    --cuero-bg: #fbf2e8;
+    --eco: #2f7d5a;
+    --eco-bg: #eaf6f0;
+    --green: #2f9e44;
+    --green-hover: #257a36;
+    --red: #d64545;
+    --red-hover: #b53535;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   }
+
   * { box-sizing: border-box; }
+
   body {
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     margin: 0;
-    padding: 24px;
-    background: var(--surface-page);
-    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 16px;
   }
-  #app { max-width: 1100px; margin: 0 auto; }
-  .header {
-    background: linear-gradient(135deg, var(--blue), var(--violet));
-    border-radius: 16px;
-    padding: 24px 28px;
+
+  h1 {
+    font-size: 1.4rem;
+    margin: 0 0 4px 0;
+    text-align: center;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+
+  #setup-banner {
+    display: none;
+    background: #fff3cd;
+    border: 1px solid #f2c744;
+    color: #6b5300;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .categorias {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 860px) {
+    .categorias { grid-template-columns: 1fr 1fr; }
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-header.cuero { background: var(--cuero-bg); }
+  .card-header.eco { background: var(--eco-bg); }
+
+  .card-header h2 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .card-header.cuero h2 { color: var(--cuero); }
+  .card-header.eco h2 { color: var(--eco); }
+
+  .total-badge {
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .total-badge small {
+    font-size: 0.7rem;
+    font-weight: 400;
+    display: block;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  .talles {
+    padding: 10px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .fila-talle {
+    display: grid;
+    grid-template-columns: 42px 1fr auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .fila-talle:last-child { border-bottom: none; }
+
+  .talle-num {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .talle-stock {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+
+  .talle-stock b {
+    color: var(--text);
+    font-size: 1.05rem;
+  }
+
+  .cantidad-input {
+    width: 52px;
+    padding: 6px 4px;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 4px;
+  }
+
+  button.op {
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
     color: #fff;
+    line-height: 1;
+  }
+
+  button.op.sumar { background: var(--green); }
+  button.op.sumar:hover { background: var(--green-hover); }
+  button.op.restar { background: var(--red); }
+  button.op.restar:hover { background: var(--red-hover); }
+  button.op:disabled { background: #bdbdbd; cursor: not-allowed; }
+
+  .historial {
+    max-width: 900px;
+    margin: 28px auto 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .historial-header {
+    padding: 14px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
   }
-  .header h1 { margin: 0; font-size: 24px; }
-  .header .subtitle { margin: 4px 0 0; font-size: 13px; opacity: 0.9; }
-  .stats { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
-  .stat {
-    flex: 1 1 140px;
-    background: var(--surface-card);
-    border-radius: 12px;
-    padding: 14px 16px;
+
+  .historial-header h2 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .filtros {
+    display: flex;
+    gap: 6px;
+  }
+
+  .filtros button {
     border: 1px solid var(--border);
-    border-top: 4px solid var(--stat-color, var(--blue));
-  }
-  .stat .stat-icon { font-size: 20px; }
-  .stat .stat-value { font-size: 26px; font-weight: 700; margin: 4px 0 2px; }
-  .stat .stat-label { font-size: 12px; color: var(--text-secondary); }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  .card {
-    background: var(--surface-card);
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
-  .card-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; color: #fff; }
-  .card-header .icon { font-size: 20px; }
-  .card-header h2 { margin: 0; font-size: 15px; flex: 1; }
-  .card-header .badge {
-    background: rgba(255,255,255,0.25);
+    background: #fff;
     border-radius: 999px;
-    padding: 3px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
+    padding: 5px 12px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: var(--text-muted);
   }
-  .card-cuero .card-header { background: var(--blue); }
-  .card-ecologico .card-header { background: var(--aqua); }
-  .card-chalecos .card-header { background: var(--violet); }
-  .card-cintos .card-header { background: var(--orange); }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { padding: 9px 18px; text-align: left; font-size: 13.5px; border-bottom: 1px solid var(--border); }
-  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); background: rgba(11,11,11,0.03); }
-  tr:last-child td { border-bottom: none; }
-  td.empty { text-align: center; color: var(--text-muted); font-style: italic; padding: 18px; }
-  .footer-note { text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 20px; }
-  .estado { text-align: center; color: var(--text-secondary); padding: 40px; font-size: 14px; }
-  .estado.error { color: #d03b3b; }
+
+  .filtros button.activo {
+    background: var(--text);
+    color: #fff;
+    border-color: var(--text);
+  }
+
+  .tabla-wrap {
+    overflow-x: auto;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 560px;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: #fafafa;
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  tbody td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .tag.cuero { background: var(--cuero-bg); color: var(--cuero); }
+  .tag.eco { background: var(--eco-bg); color: var(--eco); }
+
+  .accion.suma { color: var(--green); font-weight: 600; }
+  .accion.resta { color: var(--red); font-weight: 600; }
+
+  .vacio {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin: 24px 0 8px;
+  }
 </style>
 </head>
 <body>
 
-<div id="app">
-  <div class="header">
-    <div>
-      <h1>📦 Stock pendiente</h1>
-      <div class="subtitle">BORCEGOSTACTICOS &mdash; <span id="actualizado">cargando...</span></div>
-    </div>
-  </div>
+<h1>Control de Stock &mdash; Borcegos</h1>
+<div class="subtitle">Talles 36 al 46 &middot; se actualiza en tiempo real en todos los dispositivos</div>
 
-  <div id="contenido">
-    <div class="estado">Cargando datos...</div>
-  </div>
-
-  <div class="footer-note">Datos actualizados automaticamente cada 15 minutos desde Mercado Libre</div>
+<div id="setup-banner">
+  ⚠️ Todavía no configuraste tu proyecto de Firebase. Editá el objeto <code>firebaseConfig</code> dentro de
+  <code>index.html</code> con los datos de tu proyecto (ver README.md) para que la app pueda guardar los datos.
 </div>
 
+<div class="categorias" id="categorias">
+  <!-- Las tarjetas de Cuero y Ecológico se generan por JS -->
+</div>
+
+<div class="historial">
+  <div class="historial-header">
+    <h2>Historial de movimientos</h2>
+    <div class="filtros" id="filtros">
+      <button data-filtro="todos" class="activo">Todos</button>
+      <button data-filtro="cuero">Cuero</button>
+      <button data-filtro="eco">Ecológico</button>
+    </div>
+  </div>
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha y hora</th>
+          <th>Tipo</th>
+          <th>Talle</th>
+          <th>Acción</th>
+          <th>Cantidad</th>
+          <th>Stock resultante</th>
+        </tr>
+      </thead>
+      <tbody id="historial-body">
+        <tr><td colspan="6" class="vacio">Sin movimientos todavía.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>Control de stock de borcegos &middot; datos guardados en Firebase</footer>
+
 <script>
-// Se usa la API de GitHub (no raw.githubusercontent.com) porque el CDN de "raw"
-// a veces cachea el archivo durante horas y no refleja los cambios al instante.
-const STOCK_API_URL = "https://api.github.com/repos/roachdesign/borcegostacticos-stock/contents/stock.json";
+  // ============================================================
+  // 1) CONFIGURACIÓN DE FIREBASE
+  //    Reemplazá estos valores por los de TU proyecto de Firebase.
+  //    (Firebase Console → ⚙️ Configuración del proyecto → Tus apps → Config)
+  // ============================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyDlgG7l1YMuwc8LwSFCgTSX3uH4CG9FZOQ",
+    authDomain: "stock-borcegos-d8c6e.firebaseapp.com",
+    projectId: "stock-borcegos-d8c6e",
+    storageBucket: "stock-borcegos-d8c6e.firebasestorage.app",
+    messagingSenderId: "414960016638",
+    appId: "1:414960016638:web:e65a6392a62037d4c7d9af"
+  };
 
-function filas(items, cols, colNames) {
-  if (!items || items.length === 0) {
-    return `<tr><td colspan="${cols.length}" class="empty">Sin pedidos pendientes</td></tr>`;
+  const CATEGORIAS = [
+    { id: "cuero", nombre: "Borcegos de Cuero", clase: "cuero" },
+    { id: "eco", nombre: "Borcegos Ecológico", clase: "eco" }
+  ];
+  const TALLES = [];
+  for (let t = 36; t <= 46; t++) TALLES.push(t);
+
+  const esConfigPlaceholder = firebaseConfig.apiKey === "TU_API_KEY";
+  if (esConfigPlaceholder) {
+    document.getElementById("setup-banner").style.display = "block";
   }
-  return items.map(item => {
-    return "<tr>" + cols.map(c => `<td>${item[c]}</td>`).join("") + "</tr>";
-  }).join("");
-}
 
-function totalCantidad(items) {
-  if (!items || items.length === 0) return 0;
-  return items.reduce((sum, i) => sum + (i.cantidad || 0), 0);
-}
+  // Estado local en memoria (se sincroniza con Firestore)
+  const stockActual = {}; // stockActual["cuero-36"] = number
+  let movimientosCache = []; // lista de movimientos ya ordenados desc
+  let filtroActivo = "todos";
 
-function render(data) {
-  document.getElementById("actualizado").textContent = "actualizado " + (data.actualizado || "-");
+  // ------------------------------------------------------------
+  // 2) Construcción del HTML de cada categoría / talle
+  // ------------------------------------------------------------
+  function idStock(tipo, talle) { return `${tipo}-${talle}`; }
 
-  const totalCuero = totalCantidad(data.borcegos_cuero);
-  const totalEco = totalCantidad(data.borcegos_cuero_ecologico);
-  const totalChalecos = totalCantidad(data.chalecos);
-  const totalCintos = totalCantidad(data.cinturones);
+  function renderCategorias() {
+    const cont = document.getElementById("categorias");
+    cont.innerHTML = "";
+    CATEGORIAS.forEach(cat => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="card-header ${cat.clase}">
+          <h2>${cat.nombre}</h2>
+          <div class="total-badge" id="total-${cat.id}">0
+            <small>pares en total</small>
+          </div>
+        </div>
+        <div class="talles" id="talles-${cat.id}"></div>
+      `;
+      cont.appendChild(card);
 
-  const html = `
-    <div class="stats">
-      <div class="stat" style="--stat-color:var(--blue)"><div class="stat-icon">🚚</div><div class="stat-value">${data.envios_pendientes ?? 0}</div><div class="stat-label">Envios pendientes</div></div>
-      <div class="stat" style="--stat-color:var(--blue)"><div class="stat-icon">👢</div><div class="stat-value">${totalCuero}</div><div class="stat-label">Pares - Cuero</div></div>
-      <div class="stat" style="--stat-color:var(--aqua)"><div class="stat-icon">🌿</div><div class="stat-value">${totalEco}</div><div class="stat-label">Pares - Cuero ecologico</div></div>
-      <div class="stat" style="--stat-color:var(--violet)"><div class="stat-icon">🦺</div><div class="stat-value">${totalChalecos}</div><div class="stat-label">Chalecos</div></div>
-      <div class="stat" style="--stat-color:var(--orange)"><div class="stat-icon">🪢</div><div class="stat-value">${totalCintos}</div><div class="stat-label">Cinturones</div></div>
-    </div>
-
-    <div class="grid">
-      <div class="card card-cuero">
-        <div class="card-header"><span class="icon">👢</span><h2>Borcegos - Cuero</h2><span class="badge">${totalCuero} pares</span></div>
-        <table><tr><th>Talle</th><th>Cantidad</th></tr>${filas(data.borcegos_cuero, ["talle","cantidad"])}</table>
-      </div>
-
-      <div class="card card-ecologico">
-        <div class="card-header"><span class="icon">🌿</span><h2>Borcegos - Cuero ecologico</h2><span class="badge">${totalEco} pares</span></div>
-        <table><tr><th>Talle</th><th>Cantidad</th></tr>${filas(data.borcegos_cuero_ecologico, ["talle","cantidad"])}</table>
-      </div>
-
-      <div class="card card-chalecos">
-        <div class="card-header"><span class="icon">🦺</span><h2>Chalecos</h2><span class="badge">${totalChalecos} u.</span></div>
-        <table><tr><th>Talle</th><th>Cantidad</th></tr>${filas(data.chalecos, ["talle","cantidad"])}</table>
-      </div>
-
-      <div class="card card-cintos">
-        <div class="card-header"><span class="icon">🪢</span><h2>Cinturones</h2><span class="badge">${totalCintos} u.</span></div>
-        <table><tr><th>Tipo</th><th>Cantidad</th></tr>${filas(data.cinturones, ["tipo","cantidad"])}</table>
-      </div>
-    </div>
-  `;
-  document.getElementById("contenido").innerHTML = html;
-}
-
-function cargar() {
-  fetch(STOCK_API_URL, { headers: { Accept: "application/vnd.github+json" } })
-    .then(r => {
-      if (!r.ok) throw new Error("No se pudo leer stock.json (" + r.status + ")");
-      return r.json();
-    })
-    .then(fileInfo => {
-      const jsonText = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ""))));
-      return JSON.parse(jsonText);
-    })
-    .then(render)
-    .catch(err => {
-      document.getElementById("contenido").innerHTML =
-        `<div class="estado error">No se pudieron cargar los datos.<br>${err.message}</div>`;
+      const tallesCont = card.querySelector(`#talles-${cat.id}`);
+      TALLES.forEach(talle => {
+        const fila = document.createElement("div");
+        fila.className = "fila-talle";
+        fila.innerHTML = `
+          <div class="talle-num">${talle}</div>
+          <div class="talle-stock"><b id="stock-${idStock(cat.id, talle)}">0</b> pares</div>
+          <input type="number" min="1" value="1" class="cantidad-input" id="cant-${idStock(cat.id, talle)}">
+          <div class="btn-group">
+            <button class="op restar" title="Restar del stock" data-tipo="${cat.id}" data-talle="${talle}" data-accion="restar">−</button>
+            <button class="op sumar" title="Sumar al stock" data-tipo="${cat.id}" data-talle="${talle}" data-accion="sumar">+</button>
+          </div>
+        `;
+        tallesCont.appendChild(fila);
+      });
     });
-}
 
-cargar();
-setInterval(cargar, 15 * 60 * 1000); // refresca cada 15 minutos (mismo ritmo que el script)
+    cont.querySelectorAll("button.op").forEach(btn => {
+      btn.addEventListener("click", onClickOperacion);
+    });
+  }
+
+  function actualizarTotales() {
+    CATEGORIAS.forEach(cat => {
+      let total = 0;
+      TALLES.forEach(talle => {
+        total += stockActual[idStock(cat.id, talle)] || 0;
+      });
+      const el = document.getElementById(`total-${cat.id}`);
+      if (el) el.firstChild.textContent = total;
+    });
+  }
+
+  // ------------------------------------------------------------
+  // 3) Operaciones de stock (Firestore, con transacción para
+  //    evitar valores negativos o condiciones de carrera entre
+  //    dos dispositivos editando al mismo tiempo)
+  // ------------------------------------------------------------
+  let db = null;
+
+  function initFirebase() {
+    if (esConfigPlaceholder) return;
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    escucharStock();
+    escucharHistorial();
+  }
+
+  function escucharStock() {
+    db.collection("stock").onSnapshot(snap => {
+      snap.forEach(doc => {
+        const data = doc.data();
+        stockActual[doc.id] = data.cantidad || 0;
+        const el = document.getElementById(`stock-${doc.id}`);
+        if (el) el.textContent = stockActual[doc.id];
+      });
+      actualizarTotales();
+    }, err => console.error("Error escuchando stock:", err));
+  }
+
+  function escucharHistorial() {
+    db.collection("movimientos")
+      .orderBy("fecha", "desc")
+      .limit(200)
+      .onSnapshot(snap => {
+        movimientosCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderHistorial();
+      }, err => console.error("Error escuchando historial:", err));
+  }
+
+  async function onClickOperacion(ev) {
+    const btn = ev.currentTarget;
+    const tipo = btn.dataset.tipo;
+    const talle = Number(btn.dataset.talle);
+    const accion = btn.dataset.accion;
+    const inputCant = document.getElementById(`cant-${idStock(tipo, talle)}`);
+    const cantidad = Math.floor(Number(inputCant.value));
+
+    if (!db) {
+      alert("Falta configurar Firebase. Mirá el mensaje amarillo arriba de la página.");
+      return;
+    }
+    if (!cantidad || cantidad <= 0) {
+      alert("Ingresá una cantidad de pares válida (mayor a 0).");
+      return;
+    }
+
+    const grupo = btn.closest(".fila-talle").querySelectorAll("button.op");
+    grupo.forEach(b => b.disabled = true);
+
+    try {
+      if (accion === "sumar") {
+        await sumarStock(tipo, talle, cantidad);
+      } else {
+        await restarStock(tipo, talle, cantidad);
+      }
+    } catch (e) {
+      alert(e.message || "Ocurrió un error al actualizar el stock.");
+    } finally {
+      grupo.forEach(b => b.disabled = false);
+    }
+  }
+
+  async function sumarStock(tipo, talle, cantidad) {
+    const ref = db.collection("stock").doc(idStock(tipo, talle));
+    let nuevoValor;
+    await db.runTransaction(async (t) => {
+      const snap = await t.get(ref);
+      const actual = snap.exists ? (snap.data().cantidad || 0) : 0;
+      nuevoValor = actual + cantidad;
+      t.set(ref, { tipo, talle, cantidad: nuevoValor }, { merge: true });
+    });
+    await registrarMovimiento(tipo, talle, "suma", cantidad, nuevoValor);
+  }
+
+  async function restarStock(tipo, talle, cantidad) {
+    const ref = db.collection("stock").doc(idStock(tipo, talle));
+    let nuevoValor;
+    await db.runTransaction(async (t) => {
+      const snap = await t.get(ref);
+      const actual = snap.exists ? (snap.data().cantidad || 0) : 0;
+      if (actual - cantidad < 0) {
+        throw new Error(`No hay suficiente stock en el talle ${talle} para restar ${cantidad} par(es). Stock actual: ${actual}.`);
+      }
+      nuevoValor = actual - cantidad;
+      t.set(ref, { tipo, talle, cantidad: nuevoValor }, { merge: true });
+    });
+    await registrarMovimiento(tipo, talle, "resta", cantidad, nuevoValor);
+  }
+
+  function registrarMovimiento(tipo, talle, accion, cantidad, stockResultante) {
+    return db.collection("movimientos").add({
+      tipo,
+      talle,
+      accion,
+      cantidad,
+      stockResultante,
+      fecha: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+
+  // ------------------------------------------------------------
+  // 4) Historial: render + filtros
+  // ------------------------------------------------------------
+  function nombreCategoria(id) {
+    const cat = CATEGORIAS.find(c => c.id === id);
+    return cat ? cat.nombre : id;
+  }
+
+  function claseCategoria(id) {
+    const cat = CATEGORIAS.find(c => c.id === id);
+    return cat ? cat.clase : "";
+  }
+
+  function renderHistorial() {
+    const tbody = document.getElementById("historial-body");
+    const filtrados = filtroActivo === "todos"
+      ? movimientosCache
+      : movimientosCache.filter(m => m.tipo === filtroActivo);
+
+    if (filtrados.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="vacio">Sin movimientos todavía.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtrados.map(m => {
+      const fechaTxt = m.fecha && m.fecha.toDate
+        ? m.fecha.toDate().toLocaleString("es-AR")
+        : "—";
+      const accionTxt = m.accion === "suma" ? "+ Ingreso" : "− Baja";
+      const accionClase = m.accion === "suma" ? "suma" : "resta";
+      return `
+        <tr>
+          <td>${fechaTxt}</td>
+          <td><span class="tag ${claseCategoria(m.tipo)}">${nombreCategoria(m.tipo)}</span></td>
+          <td>${m.talle}</td>
+          <td class="accion ${accionClase}">${accionTxt}</td>
+          <td>${m.cantidad}</td>
+          <td>${m.stockResultante}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  document.getElementById("filtros").addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button[data-filtro]");
+    if (!btn) return;
+    filtroActivo = btn.dataset.filtro;
+    document.querySelectorAll("#filtros button").forEach(b => b.classList.remove("activo"));
+    btn.classList.add("activo");
+    renderHistorial();
+  });
+
+  // ------------------------------------------------------------
+  // 5) Arranque
+  // ------------------------------------------------------------
+  renderCategorias();
+  initFirebase();
 </script>
 
 </body>
