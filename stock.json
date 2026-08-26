@@ -1,41 +1,11 @@
 {
-    "actualizado":  "26/08/2026 07:52",
-    "envios_pendientes":  17,
+    "actualizado":  "26/08/2026 08:07",
+    "envios_pendientes":  0,
     "borcegos_cuero":  [
-                           {
-                               "talle":  "39",
-                               "cantidad":  1
-                           },
-                           {
-                               "talle":  "41",
-                               "cantidad":  2
-                           },
-                           {
-                               "talle":  "42",
-                               "cantidad":  6
-                           },
-                           {
-                               "talle":  "43",
-                               "cantidad":  2
-                           }
+
                        ],
     "borcegos_cuero_ecologico":  [
-                                     {
-                                         "talle":  "39",
-                                         "cantidad":  1
-                                     },
-                                     {
-                                         "talle":  "42",
-                                         "cantidad":  5
-                                     },
-                                     {
-                                         "talle":  "43",
-                                         "cantidad":  2
-                                     },
-                                     {
-                                         "talle":  "44",
-                                         "cantidad":  1
-                                     }
+
                                  ],
     "chalecos":  [
 
@@ -43,7 +13,7 @@
     "cinturones":  [
                        {
                            "tipo":  "Interno Negro",
-                           "cantidad":  1
+                           "cantidad":  0
                        },
                        {
                            "tipo":  "Externo Negro",
